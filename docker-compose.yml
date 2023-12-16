@@ -14,6 +14,8 @@ services:
     image: 298335932097.dkr.ecr.eu-central-1.amazonaws.com/spring-petclinic-config-server
     container_name: config-server.petclinic-namespace
     mem_limit: 512M
+    environment:
+      CONFIG_GIT_REPO: https://www.github.com/kotobusdriver/spring-petclinic-microservices-config
     ports:
      - 8888:8888
 
