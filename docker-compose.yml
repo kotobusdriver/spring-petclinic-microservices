@@ -10,114 +10,114 @@ services:
     ports:
       - "3306:3306"
 
-  config-server:
-    image: springcommunity/spring-petclinic-config-server
-    container_name: config-server
+  config-server.petclinic-namespace:
+    image: 298335932097.dkr.ecr.eu-central-1.amazonaws.com/spring-petclinic-config-server
+    container_name: config-server.petclinic-namespace
     mem_limit: 512M
     ports:
      - 8888:8888
 
-  discovery-server:
-    image: springcommunity/spring-petclinic-discovery-server
-    container_name: discovery-server
+  discovery-server.petclinic-namespace:
+    image: 298335932097.dkr.ecr.eu-central-1.amazonaws.com/spring-petclinic-discovery-server
+    container_name: discovery-server.petclinic-namespace
     mem_limit: 512M
     depends_on:
-      - config-server
+      - config-server.petclinic-namespace
     environment:
-      CONFIG_SERVER_URL: http://config-server:8888
-    entrypoint: ["./dockerize","-wait=tcp://config-server:8888","-timeout=60s","--","java", "org.springframework.boot.loader.JarLauncher"]
+      CONFIG_SERVER_URL: http://config-server.petclinic-namespace:8888
+    entrypoint: ["./dockerize","-wait=tcp://config-server.petclinic-namespace:8888","-timeout=60s","--","java", "org.springframework.boot.loader.JarLauncher"]
     ports:
      - 8761:8761
 
-  customers-service:
-    image: springcommunity/spring-petclinic-customers-service
-    container_name: customers-service
+  customers-service.petclinic-namespace:
+    image: 298335932097.dkr.ecr.eu-central-1.amazonaws.com/spring-petclinic-customers-service
+    container_name: customers-service.petclinic-namespace
     mem_limit: 512M
     depends_on:
-     - config-server
-     - discovery-server
+     - config-server.petclinic-namespace
+     - discovery-server.petclinic-namespace
      - db
     environment:
-      CONFIG_SERVER_URL: http://config-server:8888
-    entrypoint: ["./dockerize","-wait=tcp://discovery-server:8761","-timeout=60s","--","java", "org.springframework.boot.loader.JarLauncher"]
+      CONFIG_SERVER_URL: http://config-server.petclinic-namespace:8888
+    entrypoint: ["./dockerize","-wait=tcp://discovery-server.petclinic-namespace:8761","-timeout=60s","--","java", "org.springframework.boot.loader.JarLauncher"]
     ports:
     - 8081:8081
 
-  visits-service:
-    image: springcommunity/spring-petclinic-visits-service
-    container_name: visits-service
+  visits-service.petclinic-namespace:
+    image: 298335932097.dkr.ecr.eu-central-1.amazonaws.com/spring-petclinic-visits-service
+    container_name: visits-service.petclinic-namespace
     mem_limit: 512M
     depends_on:
-     - config-server
-     - discovery-server
+     - config-server.petclinic-namespace
+     - discovery-server.petclinic-namespace
      - db
     environment:
-      CONFIG_SERVER_URL: http://config-server:8888
-    entrypoint: ["./dockerize","-wait=tcp://discovery-server:8761","-timeout=60s","--","java", "org.springframework.boot.loader.JarLauncher"]
+      CONFIG_SERVER_URL: http://config-server.petclinic-namespace:8888
+    entrypoint: ["./dockerize","-wait=tcp://discovery-server.petclinic-namespace:8761","-timeout=60s","--","java", "org.springframework.boot.loader.JarLauncher"]
     ports:
      - 8082:8082
 
-  vets-service:
-    image: springcommunity/spring-petclinic-vets-service
-    container_name: vets-service
+  vets-service.petclinic-namespace:
+    image: 298335932097.dkr.ecr.eu-central-1.amazonaws.com/spring-petclinic-vets-service
+    container_name: vets-service.petclinic-namespace
     mem_limit: 512M
     depends_on:
-     - config-server
-     - discovery-server
+     - config-server.petclinic-namespace
+     - discovery-server.petclinic-namespace
      - db
     environment:
-      CONFIG_SERVER_URL: http://config-server:8888
-    entrypoint: ["./dockerize","-wait=tcp://discovery-server:8761","-timeout=60s","--","java", "org.springframework.boot.loader.JarLauncher"]
+      CONFIG_SERVER_URL: http://config-server.petclinic-namespace:8888
+    entrypoint: ["./dockerize","-wait=tcp://discovery-server.petclinic-namespace:8761","-timeout=60s","--","java", "org.springframework.boot.loader.JarLauncher"]
     ports:
      - 8083:8083
 
-  api-gateway:
-    image: springcommunity/spring-petclinic-api-gateway
-    container_name: api-gateway
+  api-gateway.petclinic-namespace:
+    image: 298335932097.dkr.ecr.eu-central-1.amazonaws.com/spring-petclinic-api-gateway
+    container_name: api-gateway.petclinic-namespace
     mem_limit: 512M
     depends_on:
-     - config-server
-     - discovery-server
+     - config-server.petclinic-namespace
+     - discovery-server.petclinic-namespace
     environment:
-      CONFIG_SERVER_URL: http://config-server:8888
-    entrypoint: ["./dockerize","-wait=tcp://discovery-server:8761","-timeout=60s","--","java", "org.springframework.boot.loader.JarLauncher"]
+      CONFIG_SERVER_URL: http://config-server.petclinic-namespace:8888
+    entrypoint: ["./dockerize","-wait=tcp://discovery-server.petclinic-namespace:8761","-timeout=60s","--","java", "org.springframework.boot.loader.JarLauncher"]
     ports:
      - 8080:8080
 
-  tracing-server:
+  admin-server.petclinic-namespace:
+    image: 298335932097.dkr.ecr.eu-central-1.amazonaws.com/spring-petclinic-admin-server
+    container_name: admin-server.petclinic-namespace
+    mem_limit: 512M
+    depends_on:
+     - config-server.petclinic-namespace
+     - discovery-server.petclinic-namespace
+    environment:
+      CONFIG_SERVER_URL: http://config-server.petclinic-namespace:8888
+    entrypoint: ["./dockerize","-wait=tcp://discovery-server.petclinic-namespace:8761","-timeout=60s","--","java", "org.springframework.boot.loader.JarLauncher"]
+    ports:
+     - 9090:9090
+
+  tracing-server.petclinic-namespace:
     image: openzipkin/zipkin
-    container_name: tracing-server
+    container_name: tracing-server.petclinic-namespace
     mem_limit: 512M
     environment:
     - JAVA_OPTS=-XX:+UnlockExperimentalVMOptions -Djava.security.egd=file:/dev/./urandom
     ports:
      - 9411:9411
-
-  admin-server:
-    image: springcommunity/spring-petclinic-admin-server
-    container_name: admin-server
-    mem_limit: 512M
-    depends_on:
-     - config-server
-     - discovery-server
-    environment:
-      CONFIG_SERVER_URL: http://config-server:8888
-    entrypoint: ["./dockerize","-wait=tcp://discovery-server:8761","-timeout=60s","--","java", "org.springframework.boot.loader.JarLauncher"]
-    ports:
-     - 9090:9090
-
+     
   ## Grafana / Prometheus
 
-  grafana-server:
+  grafana-server.petclinic-namespace:
     build: ./docker/grafana
-    container_name: grafana-server
+    container_name: grafana-server.petclinic-namespace
     mem_limit: 256M
     ports:
     - 3000:3000
 
-  prometheus-server:
+  prometheus-server.petclinic-namespace:
     build: ./docker/prometheus
-    container_name: prometheus-server
+    container_name: prometheus-server.petclinic-namespace
     mem_limit: 256M
     ports:
     - 9091:9090
